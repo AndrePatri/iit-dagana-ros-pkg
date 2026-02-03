@@ -1,7 +1,30 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
 
-<xacro:include filename="$(find dagana_urdf)/urdf/config/dagana_config.urdf.xacro" />
+<xacro:arg name="dagana_root" default="$(find dagana_urdf)" />  
+<xacro:property name="DAGANA_ROOT" value="$(arg dagana_root)" />
+
+<!-- setting use_abs_mesh_paths should be kept to false
+for use with tools like RViz, which does not accept plain
+abolute paths for mesh paths-->
+<xacro:arg name="use_abs_mesh_paths" default="false" />  
+<xacro:arg name="use_local_filesys_for_meshes" default="false" />  
+<xacro:property name="USE_ABS_MESH_PATHS" value="$(arg use_abs_mesh_paths)" />
+<xacro:property name="USE_LOCAL_FILESYS_FOR_MESHES" value="$(arg use_local_filesys_for_meshes)" />
+
+<xacro:if value="${USE_ABS_MESH_PATHS}">
+    <xacro:if value="${USE_LOCAL_FILESYS_FOR_MESHES}">
+    <xacro:property name="DAGANA_MESH_PATH" value="file://${DAGANA_ROOT}/meshes" />
+    </xacro:if>
+    <xacro:unless value="${USE_LOCAL_FILESYS_FOR_MESHES}">
+    <xacro:property name="DAGANA_MESH_PATH" value="${DAGANA_ROOT}/meshes" />
+    </xacro:unless>
+</xacro:if>
+<xacro:unless value="${USE_ABS_MESH_PATHS}">
+    <xacro:property name="DAGANA_MESH_PATH" value="package://dagana_urdf/meshes" />
+</xacro:unless>
+
+<xacro:include filename="${DAGANA_ROOT}/urdf/config/dagana_config.urdf.xacro" />
 
 <xacro:macro name="dagana_gripper" params="name joint_type parent_link GAZEBO_URDF:=^|false *origin">
 
@@ -30,7 +53,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dg0001-simplified.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dg0001-simplified.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -38,7 +61,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dg0001-simplified_v2.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dg0001-simplified_v2.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         
@@ -60,7 +83,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_A.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_A.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -68,7 +91,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_A_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_A_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         
@@ -89,7 +112,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_dagana-base_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_dagana-base_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -97,7 +120,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_dagana-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_dagana-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         
@@ -114,7 +137,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_B.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_B.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -122,7 +145,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_B_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_B_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -136,7 +159,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_C.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_C.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -144,7 +167,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_fixed_C_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_fixed_C_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -189,7 +212,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dg0002.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dg0002.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -197,7 +220,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dg0002-ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dg0002-ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
 
@@ -218,7 +241,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_claw_A.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_claw_A.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -226,7 +249,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_claw_A_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_claw_A_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
 
@@ -247,7 +270,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_dagana-link_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_dagana-link_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -255,7 +278,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_dagana-link_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_dagana-link_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
 
@@ -273,7 +296,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_claw_B.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_claw_B.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -281,7 +304,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/dagana_claw_B_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/dagana_claw_B_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -340,7 +363,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_formwork-base.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_formwork-base.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -348,7 +371,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_formwork-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_formwork-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -368,7 +391,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_formwork-thumb.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_formwork-thumb.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -376,7 +399,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_formwork-thumb_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_formwork-thumb_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -398,7 +421,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_tube-thumb_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_tube-thumb_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -406,7 +429,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_tube-thumb_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_tube-thumb_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>
@@ -426,7 +449,7 @@
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_tube-base_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_tube-base_simple.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
                 <material name="dagana_dark_grey"/>
             </visual>
@@ -434,7 +457,7 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://dagana_urdf/meshes/mesh_tube-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
+                    <mesh filename="${DAGANA_MESH_PATH}/mesh_tube-base_ch.stl" scale="${mmTom} ${mmTom} ${mmTom}" />
                 </geometry>
             </collision>
         </link>

@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="dagana">
 
-<xacro:include filename="$(find dagana_urdf)/urdf/dagana_macro.urdf.xacro" />
+<xacro:arg name="dagana_root" default="$(find dagana_urdf)" />  
+<xacro:property name="DAGANA_ROOT" value="$(arg dagana_root)" />
+
+<xacro:include filename="${DAGANA_ROOT}/urdf/dagana_macro.urdf.xacro" />
 
 <link name="world"/>
 <joint name="virtualFixed" type="fixed">
